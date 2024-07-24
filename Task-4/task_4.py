@@ -1,29 +1,44 @@
+def input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except KeyError:
+            return "Please enter a valid name."
+        except ValueError:
+            return "Give me name and phone please."
+        except IndexError:
+            return "Enter a command and arguments."
+
+    return inner
+
+
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
-    return cmd, *args
+    return cmd, args
 
 
+@input_error
 def add_contact(args, contacts):
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
 
+@input_error
 def change_contact(args, contacts):
     name, phone = args
     contacts[name] = phone
     return "Contact updated."
 
 
+@input_error
 def show_phone(args, contacts):
     name = args[0]
-    if name in contacts:
-        return contacts[name]
-    else:
-        return None
+    return contacts[name]
 
 
+@input_error
 def show_all(contacts):
     return contacts
 
@@ -34,7 +49,7 @@ def main():
 
     while True:
         user_input = input("Enter a command: ")
-        command, *args = parse_input(user_input)
+        command, args = parse_input(user_input)
 
         if command in ["close", "exit"]:
             print("Good bye!")
@@ -45,16 +60,10 @@ def main():
             print("\n Add  \n Change  \n Phone \n All \n Exit - Close \n")
 
         elif command == "add":
-            try:
-                print(add_contact(args, contacts))
-            except ValueError:
-                print("There must be two arguments => add [name] [phone]")
+            print(add_contact(args, contacts))
 
         elif command == "change":
-            try:
-                print(change_contact(args, contacts))
-            except ValueError:
-                print("There must be two arguments => change [name] [phone]")
+            print(change_contact(args, contacts))
 
         elif command == "phone":
             try:
@@ -64,7 +73,7 @@ def main():
                 else:
                     print("Contact not found.")
             except IndexError:
-                print("There must be => phone [name]")
+                print("Give me name")
 
         elif command == "all":
             print(show_all(contacts))
