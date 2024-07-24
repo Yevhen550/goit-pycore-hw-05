@@ -66,14 +66,7 @@ def main():
             print(change_contact(args, contacts))
 
         elif command == "phone":
-            try:
-                result = show_phone(args, contacts)
-                if result is not None:
-                    print(f"Phone number for contact {args[0]}: {result}")
-                else:
-                    print("Contact not found.")
-            except IndexError:
-                print("Give me name")
+            print(show_phone(args, contacts))
 
         elif command == "all":
             print(show_all(contacts))
